@@ -15,7 +15,9 @@
 #define CHARACTERISTIC_UUID_F "ecd7a2f4-b9c2-410f-9733-c40e75b95c59"
 #define CHARACTERISTIC_UUID_I "664f55f7-b436-4aca-b1d0-2505b456a5f5"
 #define CHARACTERISTIC_UUID_A "a674cb19-8da3-464c-8056-835b5b43d554"
-#define CHARACTERISTIC_UUID_G "4d06fd2b-3286-42d6-b218-3716ca62c5e9 "
+#define CHARACTERISTIC_UUID_G "4d06fd2b-3286-42d6-b218-3716ca62c5e9"
+
+static BLEUUID serviceUUID("4fafc201-1fb5-459e-8fcc-c5c9c331914b");
 static BLECharacteristic *pCharacteristicF;
 static BLECharacteristic *pCharacteristicI;
 static BLECharacteristic *pCharacteristicA;
@@ -43,7 +45,7 @@ void setup() {
   BLEServer *pServer = BLEDevice::createServer();
   Serial.println("Server created!");
   pServer->setCallbacks(new MyServerCallbacks());
-  BLEService *pService = pServer->createService(SERVICE_UUID);  // cree un service 
+  BLEService *pService = pServer->createService(serviceUUID, 10);  // cree un service 
   Serial.println("Service created!");
   //Characteristic flex
 pCharacteristicF = pService->createCharacteristic( // cree une characteristic avec droit d'etre lu et modifié
@@ -64,11 +66,11 @@ pCharacteristicA = pService->createCharacteristic( // cree une characteristic av
                                          BLECharacteristic::PROPERTY_WRITE
                                        );  
 //Characteristic gyro
-/*pCharacteristicG = pService->createCharacteristic( // cree une characteristic avec droit d'etre lu et modifié
+pCharacteristicG = pService->createCharacteristic( // cree une characteristic avec droit d'etre lu et modifié
                                          CHARACTERISTIC_UUID_G,
                                          BLECharacteristic::PROPERTY_READ |
                                          BLECharacteristic::PROPERTY_WRITE
-                                       );   */
+                                       );   
 Serial.println("Characteristics flags defined!");
 
  Serial.println("Debug1");
@@ -77,7 +79,7 @@ Serial.println("Characteristics flags defined!");
  pCharacteristicA->setValue("lk");
   
 
-//pCharacteristicG->setValue("jjj");
+pCharacteristicG->setValue("jjj");
 Serial.println("Debug2");
   pService->start();
   Serial.println("Service started!");
@@ -103,8 +105,8 @@ void loop() {
      pCharacteristicI->notify();
    pCharacteristicA->setValue("2");
      pCharacteristicA->notify();
-   // pCharacteristicG->setValue("3");
-   // pCharacteristicG->notify();
+   pCharacteristicG->setValue("3");
+   pCharacteristicG->notify();
     //value++;
     }
   delay(2000);

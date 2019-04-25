@@ -9,14 +9,14 @@
 //#include "BLEScan.h"
 
 // The remote service we wish to connect to.
-static BLEUUID serviceUUID("139095a1-f62a-435d-87ca-a926a6776ce9"); // configurer cet UUID dans l'autre device qui se comporte comme le server
+static BLEUUID serviceUUID("4fafc201-1fb5-459e-8fcc-c5c9c331914b"); // configurer cet UUID dans l'autre device qui se comporte comme le server
 // The characteristic of the remote service we are interested in.
 /*Definir plusieurs UUID characteristic pour chaque capteur*/
 // configurer cet UUID dans notre device qui se comporte comme le server
-static BLEUUID    charUUID_FL("28b5fa91-134a-4a11-8600-d67ac69821ae"); /////FLEX UUID À DEF....
-static BLEUUID    charUUID_INC("9a0ba601-2289-41c1-9be1-aaabd4b73239");/////INCLINAISON
+static BLEUUID    charUUID_FL("ecd7a2f4-b9c2-410f-9733-c40e75b95c59"); /////FLEX UUID À DEF....
+static BLEUUID    charUUID_INC("664f55f7-b436-4aca-b1d0-2505b456a5f5");/////INCLINAISON
 static BLEUUID    charUUID_ACCEL("a674cb19-8da3-464c-8056-835b5b43d554");/////ACCEL (X,Y,Z)
-static BLEUUID    charUUID_GYRO("6bd02261-806c-4432-b1ff-d4f7853b18cc"); ////GYRO   (X,Y,Z)
+static BLEUUID    charUUID_GYRO("4d06fd2b-3286-42d6-b218-3716ca62c5e9"); ////GYRO   (X,Y,Z)
 static boolean doConnect = false;
 //static boolean connected = false;
 static boolean doScan = false;

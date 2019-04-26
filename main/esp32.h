@@ -4,10 +4,7 @@
 
 class esp32{
 public:
-	void transmitSDdata();
-	void transmitWIFIdata();
-	void transmitBLEdata();
-	void receiveBLEdata();
+
 
 
 };

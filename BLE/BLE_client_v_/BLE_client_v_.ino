@@ -6,6 +6,8 @@
  */
 
 #include "BLEDevice.h"
+#include <BLEDevice.h>
+#include <BLEUtils.h>
 //#include "BLEScan.h"
 
 // The remote service we wish to connect to.
@@ -18,38 +20,15 @@ static BLEUUID    charUUID_INC("664f55f7-b436-4aca-b1d0-2505b456a5f5");/////INCL
 static BLEUUID    charUUID_ACCEL("a674cb19-8da3-464c-8056-835b5b43d554");/////ACCEL (X,Y,Z)
 static BLEUUID    charUUID_GYRO("4d06fd2b-3286-42d6-b218-3716ca62c5e9"); ////GYRO   (X,Y,Z)
 static boolean doConnect = false;
-//static boolean connected = false;
+static boolean connected = false;
 static boolean doScan = false;
 static BLERemoteCharacteristic* pRemoteCharacteristicF;
 static BLERemoteCharacteristic* pRemoteCharacteristicI;
 static BLERemoteCharacteristic* pRemoteCharacteristicA;
 static BLERemoteCharacteristic* pRemoteCharacteristicG;
 static BLEAdvertisedDevice* myDevice;
+#define bleServerName "ESP32_server"
 
-/*static void notifyCallback( ///?????
-  BLERemoteCharacteristic* pBLERemoteCharacteristic,
-  uint8_t* pData,
-  size_t length,
-  bool isNotify) {
-    Serial.print("Notify callback for characteristic ");
-    Serial.print(pBLERemoteCharacteristic->getUUID().toString().c_str());
-    Serial.print(" of data length ");
-    Serial.println(length);
-    Serial.print("data: ");
-    Serial.println((char*)pData);
-}*/ 
-static void FlexnotifyCallback( ///La connexion qui sera executée 
-  BLERemoteCharacteristic* pBLERemoteCharacteristic,
-  uint8_t* pData,
-  size_t length,
-  bool isNotify) {
-    Serial.print("Notify callback for characteristic ");
-    Serial.print(pBLERemoteCharacteristic->getUUID().toString().c_str());
-    Serial.print(" of data length ");
-    Serial.println(length);
-    Serial.print("data: ");
-    Serial.println((char*)pData);
-}
 
 
 /*class MyClientCallback : public BLEClientCallbacks {
@@ -98,16 +77,14 @@ bool connectToServer() {/// exec
 
 
    if(pRemoteCharacteristicF->canNotify())
+      //Relie les fonctions de callback aux characteristics
       pRemoteCharacteristicF->registerForNotify(FlexnotifyCallback);
-
-    //if(pRemoteCharacteristicI->canNotify())
-    //pRemoteCharacteristicI->registerForNotify(InclnotifyCallback);
-
-    //if(pRemoteCharacteristicA->canNotify())
-    //  pRemoteCharacteristicA->registerForNotify(AccnotifyCallback);
-
-    //if(pRemoteCharacteristicG->canNotify())
-    //  pRemoteCharacteristicG->registerForNotify(GyronotifyCallback);
+    if(pRemoteCharacteristicI->canNotify())
+      pRemoteCharacteristicI->registerForNotify(InclnotifyCallback);
+    if(pRemoteCharacteristicA->canNotify())
+      pRemoteCharacteristicA->registerForNotify(AccelnotifyCallback);
+    if(pRemoteCharacteristicG->canNotify())
+      pRemoteCharacteristicG->registerForNotify(GyronotifyCallback);
 
     // Read the value of the characteristic. /*On lit la valeur des caracteristiques pour chaque capteurs*/
     /*if(pRemoteCharacteristicF->canRead()) {
@@ -148,7 +125,7 @@ class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {/////exe
     Serial.println(advertisedDevice.toString().c_str());
 
     // We have found a device, let us now see if it contains the service we are looking for.
-    if (advertisedDevice.haveServiceUUID() && advertisedDevice.isAdvertisingService(serviceUUID)) {
+    if (advertisedDevice.getName() == bleServerName) {
 
       BLEDevice::getScan()->stop();//on a trouvé ce qu'on cherchait, on stop
       myDevice = new BLEAdvertisedDevice(advertisedDevice);
@@ -160,6 +137,47 @@ class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {/////exe
   } // onResult
 }; // MyAdvertisedDeviceCallbacks
 
+
+static void FlexnotifyCallback( ///La connexion qui sera executée 
+  BLERemoteCharacteristic* pBLERemoteCharacteristic, uint8_t* pData, size_t length,bool isNotify) {
+    Serial.print("Notify callback for characteristic ");
+    Serial.print(pBLERemoteCharacteristic->getUUID().toString().c_str());
+    Serial.print(" of data length ");
+    Serial.println(length);
+    Serial.print("data: ");
+    Serial.println((char*)pData);
+    Serial.print("ohm");
+}
+static void InclnotifyCallback( ///La connexion qui sera executée 
+  BLERemoteCharacteristic* pBLERemoteCharacteristic, uint8_t* pData, size_t length, bool isNotify) {
+    Serial.print("Notify callback for characteristic ");
+    Serial.print(pBLERemoteCharacteristic->getUUID().toString().c_str());
+    Serial.print(" of data length ");
+    Serial.println(length);
+    Serial.print("data: ");
+    Serial.println((char*)pData);
+    Serial.print("degrés");
+}
+static void AccelnotifyCallback( ///La connexion qui sera executée 
+  BLERemoteCharacteristic* pBLERemoteCharacteristic, uint8_t* pData, size_t length, bool isNotify) {
+    Serial.print("Notify callback for characteristic ");
+    Serial.print(pBLERemoteCharacteristic->getUUID().toString().c_str());
+    Serial.print(" of data length ");
+    Serial.println(length);
+    Serial.print("data: ");
+    Serial.println((char*)pData);
+    Serial.print("unités");
+}
+static void GyronotifyCallback( ///La connexion qui sera executée 
+  BLERemoteCharacteristic* pBLERemoteCharacteristic, uint8_t* pData, size_t length, bool isNotify) {
+    Serial.print("Notify callback for characteristic ");
+    Serial.print(pBLERemoteCharacteristic->getUUID().toString().c_str());
+    Serial.print(" of data length ");
+    Serial.println(length);
+    Serial.print("data: ");
+    Serial.println((char*)pData);
+    Serial.print("unités");
+}
 
 void setup() {
   Serial.begin(115200);

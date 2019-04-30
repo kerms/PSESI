@@ -16,6 +16,7 @@
 #define CHARACTERISTIC_UUID_I "664f55f7-b436-4aca-b1d0-2505b456a5f5"
 #define CHARACTERISTIC_UUID_A "a674cb19-8da3-464c-8056-835b5b43d554"
 #define CHARACTERISTIC_UUID_G "4d06fd2b-3286-42d6-b218-3716ca62c5e9"
+#define bleServerName "ESP32_server"
 
 static BLEUUID serviceUUID("4fafc201-1fb5-459e-8fcc-c5c9c331914b");
 static BLECharacteristic *pCharacteristicF;
@@ -41,7 +42,7 @@ class MyServerCallbacks : public BLEServerCallbacks {
 void setup() {
   Serial.begin(115200);
   Serial.println("Starting BLE work!");
-  BLEDevice::init("ESP32 Server"); //donner un nom à notre server
+  BLEDevice::init(bleServerName); //donner un nom à notre server
   BLEServer *pServer = BLEDevice::createServer();
   Serial.println("Server created!");
   pServer->setCallbacks(new MyServerCallbacks());
@@ -74,17 +75,15 @@ pCharacteristicG = pService->createCharacteristic( // cree une characteristic av
 Serial.println("Characteristics flags defined!");
 
  Serial.println("Debug1");
- pCharacteristicF->setValue("jjj");
- pCharacteristicI->setValue("jjj");
- pCharacteristicA->setValue("lk");
-  
-
-pCharacteristicG->setValue("jjj");
+ pCharacteristicF->setValue("set flex");
+ pCharacteristicI->setValue("set incl");
+ pCharacteristicA->setValue("set accl");
+ pCharacteristicG->setValue("set gyro");
 Serial.println("Debug2");
   pService->start();
   Serial.println("Service started!");
-  // BLEAdvertising *pAdvertising = pServer->getAdvertising();  // this still is working for backward compatibility
-  BLEAdvertising *pAdvertising = BLEDevice::getAdvertising(); // creation de l'advertiser
+  BLEAdvertising *pAdvertising = pServer->getAdvertising();  // this still is working for backward compatibility
+  //BLEAdvertising *pAdvertising = BLEDevice::getAdvertising(); // creation de l'advertiser
   /* INITIALISATION DE L'ADVERTISER*/
   pAdvertising->addServiceUUID(SERVICE_UUID); 
   pAdvertising->setScanResponse(true);
@@ -97,7 +96,8 @@ Serial.println("Debug2");
 void loop() {
   if (connected)
   {
-    Serial.printf ("valeur mise des capteurs: %d\n", value);
+    //Serial.printf ("valeur mise des capteurs: %d\n", value);
+    Serial.printf ("Mise à jour valeur des capteurs dans les characteristics\n");
     pCharacteristicF->setValue("0"); // Ecriture d'une valeur dans le characteristic qu'on va pourvoir lire ou modifier
      pCharacteristicF->notify();
      

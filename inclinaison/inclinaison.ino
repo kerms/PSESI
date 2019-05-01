@@ -6,8 +6,8 @@ Jim Lindblom @ SparkFun Electronics
 April 28, 2016
 
 Create a voltage divider circuit combining a flex sensor with a 47k resistor.
-- The resistor should connect from A0 to GND.
-- The flex sensor should connect from A0 to 3.3V
+- The resistor should connect from 3.3V to the pin.
+- The flex sensor should connect from the pin to GND
 As the resistance of the flex sensor increases (meaning it's being bent), the
 voltage at A0 should decrease.
 

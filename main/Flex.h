@@ -11,7 +11,7 @@ and your pin.
 
 
 
-class flex : public sensor{
+class Flex : public sensor{
 
 
 private:
@@ -22,6 +22,14 @@ private:
 
 
 public:
+	Flex::Flex(int pin, float DivResistor, float StraightResistance, float BendResistance){
+		this.pin=pin;
+		this.DivResistor=DivResistor;
+		this.StraightResistance=StraightResistance;
+		this.BendResistance=BendResistance;
+	}
+
+	
 	bool readResData(void* buff){
 		int ADC_pin= analogRead(pin); // Read the ADC value of the pin chosen (between 0 to 4095)
 		if(ADC_pin<1000 or ADC_pin>3500) return 0; // ADC value does not match with expectations : Mostly pin issue or misconnections

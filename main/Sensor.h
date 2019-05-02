@@ -9,7 +9,7 @@
 
 
 
-class sensor{
+class Sensor{
 
 protected:
 	int idposition;

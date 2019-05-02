@@ -14,13 +14,18 @@ value become 0.
 
 
 
-class tilt : public sensor{
+class Tilt : public sensor{
 
 
 private:
 	int 	pin;
 
 public:
+	Tilt::Tilt(int pin) : pin(pin)
+	{
+
+	}
+
 	bool readData(void* buff){
 		*buff=digitalRead(this.pin); // Give 1 if we have 3.3V, else 0
 		if( *buff!=0 || *buff!=1 ) return 0; 

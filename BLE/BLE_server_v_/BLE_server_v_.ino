@@ -12,7 +12,7 @@
 // https://www.uuidgenerator.net/
 
 #define SERVICE_UUID          "4fafc201-1fb5-459e-8fcc-c5c9c331914b"
-#define CHARACTERISTIC_UUID_F "ecd7a2f4-b9c2-410f-9733-c40e75b95c59"
+#define CHARACTERISTIC_UUID_F "beb5483e-36e1-4688-b7f5-ea07361b26a8"
 #define CHARACTERISTIC_UUID_I "664f55f7-b436-4aca-b1d0-2505b456a5f5"
 #define CHARACTERISTIC_UUID_A "a674cb19-8da3-464c-8056-835b5b43d554"
 #define CHARACTERISTIC_UUID_G "4d06fd2b-3286-42d6-b218-3716ca62c5e9"
@@ -90,7 +90,7 @@ Serial.println("Debug2");
   pAdvertising->setMinPreferred(0x06);  // functions that help with iPhone connections issue
   pAdvertising->setMinPreferred(0x12);
   BLEDevice::startAdvertising(); // Activation pour dire que "Hey je suis là"
-  Serial.println("Characteristic defined! Now you can read it in your phone!");
+  Serial.println("Characteristic defined! Now you can read data in ESP client!");
 }
 
 void loop() {

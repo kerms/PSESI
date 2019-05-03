@@ -15,7 +15,7 @@ static BLEUUID serviceUUID("4fafc201-1fb5-459e-8fcc-c5c9c331914b"); // configure
 // The characteristic of the remote service we are interested in.
 /*Definir plusieurs UUID characteristic pour chaque capteur*/
 // configurer cet UUID dans notre device qui se comporte comme le server
-static BLEUUID    charUUID_FL("ecd7a2f4-b9c2-410f-9733-c40e75b95c59"); /////FLEX UUID À DEF....
+static BLEUUID    charUUID_F("ecd7a2f4-b9c2-410f-9733-c40e75b95c59"); /////FLEX UUID À DEF....
 static BLEUUID    charUUID_INC("664f55f7-b436-4aca-b1d0-2505b456a5f5");/////INCLINAISON
 static BLEUUID    charUUID_ACCEL("a674cb19-8da3-464c-8056-835b5b43d554");/////ACCEL (X,Y,Z)
 static BLEUUID    charUUID_GYRO("4d06fd2b-3286-42d6-b218-3716ca62c5e9"); ////GYRO   (X,Y,Z)
@@ -31,7 +31,7 @@ static BLEAdvertisedDevice* myDevice;
 
 
 
-/*class MyClientCallback : public BLEClientCallbacks {
+class MyClientCallback : public BLEClientCallbacks {
   void onConnect(BLEClient* pclient) {
   }
 
@@ -39,7 +39,50 @@ static BLEAdvertisedDevice* myDevice;
     connected = false;
     Serial.println("onDisconnect");
   }
-};*/
+};
+
+
+static void FlexnotifyCallback( ///La connexion qui sera executée 
+  BLERemoteCharacteristic* pBLERemoteCharacteristic, uint8_t* pData, size_t length,bool isNotify) {
+    Serial.print("Notify callback for characteristic ");
+    Serial.print(pBLERemoteCharacteristic->getUUID().toString().c_str());
+    Serial.print(" of data length ");
+    Serial.println(length);
+    Serial.print("data: ");
+    Serial.println((char*)pData);
+    Serial.print("ohm");
+}
+static void InclnotifyCallback( ///La connexion qui sera executée 
+  BLERemoteCharacteristic* pBLERemoteCharacteristic, uint8_t* pData, size_t length, bool isNotify) {
+    Serial.print("Notify callback for characteristic ");
+    Serial.print(pBLERemoteCharacteristic->getUUID().toString().c_str());
+    Serial.print(" of data length ");
+    Serial.println(length);
+    Serial.print("data: ");
+    Serial.println((char*)pData);
+    Serial.print("degrés");
+}
+static void AccelnotifyCallback( ///La connexion qui sera executée 
+  BLERemoteCharacteristic* pBLERemoteCharacteristic, uint8_t* pData, size_t length, bool isNotify) {
+    Serial.print("Notify callback for characteristic ");
+    Serial.print(pBLERemoteCharacteristic->getUUID().toString().c_str());
+    Serial.print(" of data length ");
+    Serial.println(length);
+    Serial.print("data: ");
+    Serial.println((char*)pData);
+    Serial.print("unités");
+}
+static void GyronotifyCallback( ///La connexion qui sera executée 
+  BLERemoteCharacteristic* pBLERemoteCharacteristic, uint8_t* pData, size_t length, bool isNotify) {
+    Serial.print("Notify callback for characteristic ");
+    Serial.print(pBLERemoteCharacteristic->getUUID().toString().c_str());
+    Serial.print(" of data length ");
+    Serial.println(length);
+    Serial.print("data: ");
+    Serial.println((char*)pData);
+    Serial.print("unités");
+}
+
 bool connectToServer() {/// exec
     Serial.print("Forming a connection to ");
     Serial.println(myDevice->getAddress().toString().c_str());
@@ -47,7 +90,7 @@ bool connectToServer() {/// exec
     BLEClient*  pClient  = BLEDevice::createClient();
     Serial.println(" - Created client");
 
-    //pClient->setClientCallbacks(new MyClientCallback());
+    pClient->setClientCallbacks(new MyClientCallback());
 
     // Connect to the remove BLE Server.
     pClient->connect(myDevice);  // if you pass BLEAdvertisedDevice instead of address, it will be recognized type of peer device address (public or private)
@@ -63,10 +106,10 @@ bool connectToServer() {/// exec
     Serial.println(" - Found our service");
 
     // Obtain a reference to the characteristic in the service of the remote BLE server.
-    pRemoteCharacteristicF = pRemoteService->getCharacteristic(charUUID_FL);
+    pRemoteCharacteristicF = pRemoteService->getCharacteristic(charUUID_F);
          Serial.println(" DebugF");
-    pRemoteCharacteristicI = pRemoteService->getCharacteristic(charUUID_INC);
-         Serial.println(" DebugI");
+    //pRemoteCharacteristicI = pRemoteService->getCharacteristic(charUUID_INC);
+      //   Serial.println(" DebugI");
     //pRemoteCharacteristicA = pRemoteService->getCharacteristic(charUUID_ACCEL);
     //pRemoteCharacteristicG = pRemoteService->getCharacteristic(charUUID_GYRO);    
      Serial.println(" Debug1");
@@ -75,7 +118,7 @@ bool connectToServer() {/// exec
       Serial.print("Erreur pour trouver les characteristics  ");
       return false;
     } 
-    Serial.println(" - characteristics trouvé");                                //SUCCES A LA CONNEXION AU SERVICE
+    Serial.println(" - characteristics trouvés");                                //SUCCES A LA CONNEXION AU SERVICE
 
 
    if(pRemoteCharacteristicF->canNotify())
@@ -123,6 +166,7 @@ class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {/////exe
    * Called for each advertising BLE server.
    */
   void onResult(BLEAdvertisedDevice advertisedDevice) {
+    
     Serial.print("BLE Advertised Device found: ");
     Serial.println(advertisedDevice.toString().c_str());
 
@@ -140,46 +184,6 @@ class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {/////exe
 }; // MyAdvertisedDeviceCallbacks
 
 
-static void FlexnotifyCallback( ///La connexion qui sera executée 
-  BLERemoteCharacteristic* pBLERemoteCharacteristic, uint8_t* pData, size_t length,bool isNotify) {
-    Serial.print("Notify callback for characteristic ");
-    Serial.print(pBLERemoteCharacteristic->getUUID().toString().c_str());
-    Serial.print(" of data length ");
-    Serial.println(length);
-    Serial.print("data: ");
-    Serial.println((char*)pData);
-    Serial.print("ohm");
-}
-static void InclnotifyCallback( ///La connexion qui sera executée 
-  BLERemoteCharacteristic* pBLERemoteCharacteristic, uint8_t* pData, size_t length, bool isNotify) {
-    Serial.print("Notify callback for characteristic ");
-    Serial.print(pBLERemoteCharacteristic->getUUID().toString().c_str());
-    Serial.print(" of data length ");
-    Serial.println(length);
-    Serial.print("data: ");
-    Serial.println((char*)pData);
-    Serial.print("degrés");
-}
-static void AccelnotifyCallback( ///La connexion qui sera executée 
-  BLERemoteCharacteristic* pBLERemoteCharacteristic, uint8_t* pData, size_t length, bool isNotify) {
-    Serial.print("Notify callback for characteristic ");
-    Serial.print(pBLERemoteCharacteristic->getUUID().toString().c_str());
-    Serial.print(" of data length ");
-    Serial.println(length);
-    Serial.print("data: ");
-    Serial.println((char*)pData);
-    Serial.print("unités");
-}
-static void GyronotifyCallback( ///La connexion qui sera executée 
-  BLERemoteCharacteristic* pBLERemoteCharacteristic, uint8_t* pData, size_t length, bool isNotify) {
-    Serial.print("Notify callback for characteristic ");
-    Serial.print(pBLERemoteCharacteristic->getUUID().toString().c_str());
-    Serial.print(" of data length ");
-    Serial.println(length);
-    Serial.print("data: ");
-    Serial.println((char*)pData);
-    Serial.print("unités");
-}
 
 void setup() {
   Serial.begin(115200);
@@ -211,6 +215,17 @@ void loop() {
       Serial.println("We have failed to connect to the server; there is nothin more we will do.");
     }
     doConnect = false;
+  }
+  if (connected) {
+   /*Recupere les valeurs dans les characteristiques*/
+   if(pRemoteCharacteristicF->canRead()) {
+      std::string value = pRemoteCharacteristicF->readValue();
+      Serial.print("The characteristic value was: ");
+      Serial.println(value.c_str());
+    }
+   
+  }else if(doScan){
+    BLEDevice::getScan()->start(0);  // this is just eample to start scan after disconnect, most likely there is better way to do it in arduino
   }
 
   

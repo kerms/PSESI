@@ -64,10 +64,12 @@ bool connectToServer() {/// exec
 
     // Obtain a reference to the characteristic in the service of the remote BLE server.
     pRemoteCharacteristicF = pRemoteService->getCharacteristic(charUUID_FL);
+         Serial.println(" DebugF");
     pRemoteCharacteristicI = pRemoteService->getCharacteristic(charUUID_INC);
-    pRemoteCharacteristicA = pRemoteService->getCharacteristic(charUUID_ACCEL);
-    pRemoteCharacteristicG = pRemoteService->getCharacteristic(charUUID_GYRO);    
-
+         Serial.println(" DebugI");
+    //pRemoteCharacteristicA = pRemoteService->getCharacteristic(charUUID_ACCEL);
+    //pRemoteCharacteristicG = pRemoteService->getCharacteristic(charUUID_GYRO);    
+     Serial.println(" Debug1");
 
     if (pRemoteCharacteristicF == nullptr || pRemoteCharacteristicI == nullptr || pRemoteCharacteristicA == nullptr || pRemoteCharacteristicG == nullptr) {                                         //ECHEC A LA CONNEXION AU CHARACTERISTIC
       Serial.print("Erreur pour trouver les characteristics  ");

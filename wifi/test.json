@@ -1,0 +1,11 @@
+{
+	"sensor": {
+		"name": "sensor_name",
+		"user_id" : 10086, 
+		"datatype" : 10086,
+		"data": [
+			{"value" : 10086, "time" : 654321},
+			{"value" : 10086, "time" : 654321}
+		]
+	}
+}

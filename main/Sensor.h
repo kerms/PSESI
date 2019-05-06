@@ -4,7 +4,6 @@
 #define POS_NECK    1
 #define POS_WRIST   2
 #define POS_EAR     3
-#define VCC			3.3 // VCC value given by ESP32. You need to measure it and make the real value here
 
 
 
@@ -14,9 +13,13 @@ class Sensor{
 protected:
 	int idposition;
 	float VCC;
+	int type;
+
 
 public:
-	virtual bool readData(void* buff)=0;
+	virtual void saveData()=0;
+	virtual int getType()=0;
+	virtual std::string toString()=0;
 
 };
 

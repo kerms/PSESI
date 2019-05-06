@@ -26,17 +26,17 @@ public:
 
 	}
 
-	bool readData(void* buff){
-		*buff=digitalRead(this.pin); // Give 1 if we have 3.3V, else 0
-		if( *buff!=0 || *buff!=1 ) return 0; 
-		return 1; 
+	int readData(){
+		return digitalRead(this.pin); // Give 1 if we have 3.3V, else 0
 	}
 
+	//TODOOOO
 	static bool readData(void* buff, int pin){ // Static method for resistance
 		*buff=digitalRead(pin);
 		if( *buff!=0 || *buff!=1 ) return 0; 
 		return 1; 
 	}
+
 
 	void setPin(int pin){
 		this.pin=pin;
@@ -48,6 +48,12 @@ public:
 
 	void setup(){ 	// To setup tilt's pin
 		pinMode(pin,INPUT);
+	}
+
+	std::string toString(){
+		std::string s="";
+		s+=readData();
+		return s:
 	}
 
 

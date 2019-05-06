@@ -11,7 +11,7 @@ and your pin.
 
 
 
-class Flex : public sensor{
+class Flex : public Sensor{
 
 
 private:
@@ -19,33 +19,37 @@ private:
 	float 	DivResistor; 		// Divider circuit's resistor
 	float 	StraightResistance; // Flex straight resistance. Use the one you measure to avoid disparty values
 	float	BendResistance; 	// Flex bend resistance
+	float 	buf[]; //TODOOOOOOOO
+	int 	size;				// Buf size
+	int 	bufPos;				// Buf position
 
 
 public:
-	Flex::Flex(int pin, float DivResistor, float StraightResistance, float BendResistance){
+	Flex::Flex(int pin, float DivResistor, float StraightResistance, float BendResistance, int size=500){
 		this.pin=pin;
 		this.DivResistor=DivResistor;
 		this.StraightResistance=StraightResistance;
 		this.BendResistance=BendResistance;
+		this.buf= new buf[size];
 	}
 
 	
-	bool readResData(void* buff){
+	float readResData(){
 		int ADC_pin= analogRead(pin); // Read the ADC value of the pin chosen (between 0 to 4095)
-		if(ADC_pin<1000 or ADC_pin>3500) return 0; // ADC value does not match with expectations : Mostly pin issue or misconnections
+		if(ADC_pin<1000 or ADC_pin>3500) return -1; // ADC value does not match with expectations : Mostly pin issue or misconnections
 		float Volt_pin = ADC_pin*VCC/4095.0; // Cross-multiplication for Volt_pin
-		*buff=DivResistor*(1/( (VCC / Volt_pin ) -1.0)) ; // Using divider circuit's formula
-		return 1
+		return DivResistor*(1/( (VCC / Volt_pin ) -1.0)) ; // Using divider circuit's formula
 	}
 
-	bool readAngleData(void* buff){ //Convert resistance to angle through mapping
-		float* resistance;
-		readResData(resistance);
-		if(resistance<1000 or resistance>3500) return 0;
-		*buff=map(resistor, StraightResistance, BendResistance, 0 ,90.0);
-		return 1;
+	float readAngleData(){ //Convert resistance to angle through mapping
+		float resistance;
+		float angle;
+		resistance= readResData();
+		if(resistance<1000 or resistance>3500) return -1;
+		return map(resistor, StraightResistance, BendResistance, 0 ,90.0);
 	}
 
+	// TODOOOOOOO
 	static bool readData(void* buff, int pin, float DivResistor){ // Static method for resistance
 		int ADC_pin= analogRead(pin);
 		if(ADC_pin<1000 or ADC_pin>3500) return 0; 
@@ -86,9 +90,22 @@ public:
 		return BendResistance;
 	}
 
+	int getType(){
+		return type;
+	}
+
 	void setup(){ 	// To setup Flex's pin
 		pinMode(pin,INPUT);
 	}
+
+	void saveData();
+
+	std::string toString(){
+		std::string s="";
+		s+=readAngleData();
+		return s;
+	}
+
 
 
 };

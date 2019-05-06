@@ -1,9 +1,17 @@
-void setup() {
-  // put your setup code here, to run once:
+#include "BaseN.h"
 
+Flex *flex=new flex(4, 10000, 10000, 20000);
+BaseN neck= new BaseN(NULL, flex);
+
+float resis;
+
+void setup() {
+  Serial.begin(115200);
+  flex.setup();
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-
+  resis=flex.readAngleData();
+  Serial.println("Resistance: " +String(resis)+ " ohms");
+  neck.transmitWifi();
 }

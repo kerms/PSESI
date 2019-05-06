@@ -108,5 +108,11 @@ bool BLE_connect() {
     return true;
 }
 
+void BLE_write(int target, std::string value){
+    if (target > NB_CHAR)
+        return;
+    
+    _remoteChar[target]->writeValue(value);
+}
 
 #endif

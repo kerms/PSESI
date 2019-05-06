@@ -1,9 +1,15 @@
+#include <WiFi.h>
+WiFiClient client;
+
+#include "Flex.h"
 #include "BaseN.h"
 
-Flex *flex=new flex(4, 10000, 10000, 20000);
-BaseN neck= new BaseN(NULL, flex);
+
+Flex flex(4, 10000, 10000, 20000);
+BaseN *neck= new BaseN(NULL, flex);
 
 float resis;
+
 
 void setup() {
   Serial.begin(115200);

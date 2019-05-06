@@ -6,12 +6,12 @@ need in this position.
 #ifndef DEF_BASEC
 #define DEF_BASEC
 
-#include "esp32.h"
-#include "tilt.h"
-#include "flex.h"
+#include "Esp32.h"
+#include "Tilt.h"
+#include "Flex.h"
 #include "wifi_client.h"
 
-#define MAX_WAIT_FOR_TIMER 2 // 1 timer to read data every period_1, a timer to save those on sd card, an other for WIFI
+ // 1 timer to read data every period_1, a timer to save those on sd card, an other for WIFI
 #define BUFF_WEIGHT 100
 #define DataTimer	0
 #define SDTimer		1
@@ -25,7 +25,7 @@ need in this position.
 
 extern WiFiClient client;
 
-class BaseN : public esp32 {
+class BaseN : public Esp32 {
 
 private:
 	Sensor* tilt;
@@ -34,7 +34,7 @@ private:
 
 public:
 
-	BaseN :: BaseN(Sensor* tilt=NULL, Sensor* flex=NULL) : this.tilt(tilt), this.flex(flex)
+	BaseN(Sensor* tilt=NULL, Sensor* flex=NULL) : tilt(tilt), flex(flex)
 	{
 		wifi_connect(SESI_SSID, SESS_PASS, -1);
 		wifi_connect_server(SESI_IPv4, SESI_PORT);
@@ -42,9 +42,9 @@ public:
 	}
 
 	std::string readData(){
-		if (!waitFor(DataTimer, DataPeriod)) return;
+		if (!waitFor(DataTimer, DataPeriod)) return "";
 		//tilt.toString();
-		return flex.toString();
+		return flex->toString();
 	}
 
 	void transmitSD(){

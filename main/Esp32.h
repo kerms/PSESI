@@ -4,7 +4,7 @@ Parent class for Neck and Wrist
 
 #ifndef DEF_ESP32
 #define DEF_ESP32
-
+#define MAX_WAIT_FOR_TIMER 1
 
 
 class Esp32{

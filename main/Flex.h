@@ -7,7 +7,7 @@ and your pin.
 #ifndef DEF_FLEX
 #define DEF_FLEX
 
-#include "sensor.h"
+#include "Sensor.h"
 
 
 
@@ -19,18 +19,18 @@ private:
 	float 	DivResistor; 		// Divider circuit's resistor
 	float 	StraightResistance; // Flex straight resistance. Use the one you measure to avoid disparty values
 	float	BendResistance; 	// Flex bend resistance
-	float 	buf[]; //TODOOOOOOOO
+	float 	*buf; //TODOOOOOOOO
 	int 	size;				// Buf size
 	int 	bufPos;				// Buf position
 
 
 public:
-	Flex::Flex(int pin, float DivResistor, float StraightResistance, float BendResistance, int size=500){
-		this.pin=pin;
-		this.DivResistor=DivResistor;
-		this.StraightResistance=StraightResistance;
-		this.BendResistance=BendResistance;
-		this.buf= new buf[size];
+	Flex(int pin, float DivResistor, float StraightResistance, float BendResistance, int size=500){
+		this->pin=pin;
+		this->DivResistor=DivResistor;
+		this->StraightResistance=StraightResistance;
+		this->BendResistance=BendResistance;
+		this->buf= new float[size];
 	}
 
 	
@@ -59,7 +59,7 @@ public:
 	}
 
 	void setPin(int pin){
-		this.pin=pin;
+		this->pin=pin;
 	}
 
 	int getPin(){
@@ -67,15 +67,15 @@ public:
 	}
 
 	void setDivResistor(float resistance){
-		this.resistor=resistor;
+		this->DivResistor=resistance;
 	}
 
 	float getDivResistor(){
-		return resistor;
+		return DivResistor;
 	}
 
 	void setStraightResistance(float resistance){
-		this.StraightResistance=resistance;
+		this->StraightResistance=resistance;
 	}
 
 	float getStraightResistance(){
@@ -83,7 +83,7 @@ public:
 	}
 
 	void setBendResistance(float resistance){
-		this.BendResistance=resistance;
+		this->BendResistance=resistance;
 	}
 
 	float getBendResistance(){

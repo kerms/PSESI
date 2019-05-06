@@ -8,7 +8,7 @@
 extern boolean _connected;
 extern boolean _scan_found;
 extern BLERemoteCharacteristic * _remoteChar[NB_CHAR];
-extern BLEAdvertisedDevice* _myDevice;
+extern BLEAddress* _myDevice;
 extern BLEScan* _pBLEScan;
 
 class MyClientCallback : public BLEClientCallbacks {
@@ -41,7 +41,7 @@ class MyAdvertisedDeviceCallbacks: public BLEAdvertisedDeviceCallbacks {
             _pBLEScan->stop();
             if(_myDevice)
                 delete _myDevice;
-            _myDevice = new BLEAdvertisedDevice(advertisedDevice);
+            _myDevice = new BLEAddress(advertisedDevice.getAddress());
             _scan_found = true;
             Serial.println("Device found. Connecting!");
         }
@@ -58,7 +58,7 @@ void init_BLE_client()
 
 bool BLE_connect() {
 	if (_scan_found == false) {
-		_pBLEScan->start(2, true);
+		_pBLEScan->start(2);
 		return false;
 	}
 
@@ -66,7 +66,7 @@ bool BLE_connect() {
         return true;
     }
     Serial.print("Forming a connection to ");
-    Serial.println(_myDevice->getAddress().toString().c_str());
+    Serial.println(_myDevice->toString().c_str());
     
     BLEClient*  pClient  = BLEDevice::createClient();
 
@@ -76,7 +76,7 @@ bool BLE_connect() {
     // if you pass BLEAdvertisedDevice instead of address, 
     //it will be recognized type of peer device address (public or private)
     Serial.println(" - Connected to server");
-    pClient->connect(_myDevice);  
+    pClient->connect(*_myDevice);  
 
     // Obtain a reference to the service we are after in the remote BLE server.
     BLERemoteService* pRemoteService = pClient->getService(servUUID); 

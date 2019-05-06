@@ -5,5 +5,5 @@
 boolean _connected = false;
 boolean _scan_found = false;
 BLERemoteCharacteristic * _remoteChar[NB_CHAR];
-BLEAdvertisedDevice* _myDevice;
+BLEAddress* _myDevice;
 BLEScan* _pBLEScan;

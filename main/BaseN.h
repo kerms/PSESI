@@ -34,11 +34,12 @@ private:
 
 public:
 
-	BaseN(Sensor* tilt=NULL, Sensor* flex=NULL) : tilt(tilt), flex(flex)
+	BaseN(Sensor* tilt=NULL, Sensor* flex=NULL)
 	{
 		wifi_connect(SESI_SSID, SESS_PASS, -1);
 		wifi_connect_server(SESI_IPv4, SESI_PORT);
-
+		this->tilt = tilt;
+		this->flex = flex;
 	}
 
 	std::string readData(){

@@ -9,6 +9,7 @@ and your pin.
 
 #include "Sensor.h"
 
+#define DEF_VCC 3.3
 
 
 class Flex : public Sensor{
@@ -20,17 +21,26 @@ private:
 	float 	StraightResistance; // Flex straight resistance. Use the one you measure to avoid disparty values
 	float	BendResistance; 	// Flex bend resistance
 	float 	*buf; //TODOOOOOOOO
-	int 	size;				// Buf size
-	int 	bufPos;				// Buf position
+	int 	bufSize;				// Buf size
+	int 	bufPos;				// Buf write position
 
 
 public:
-	Flex(int pin, float DivResistor, float StraightResistance, float BendResistance, int size=500){
+	Flex(int pin, float DivResistor, float StraightResistance, float BendResistance, int buf_size=500)
+		:Sensor(0, 3.3, 0)
+	{
 		this->pin=pin;
 		this->DivResistor=DivResistor;
 		this->StraightResistance=StraightResistance;
 		this->BendResistance=BendResistance;
-		this->buf= new float[size];
+		this->buf= new float[buf_size];
+		this->bufSize = buf_size;
+		this->bufPos = 0;
+		pinMode(pin,INPUT);
+	}
+
+	virtual ~Flex(){
+		delete [] buf;
 	}
 
 	
@@ -46,17 +56,19 @@ public:
 		float angle;
 		resistance= readResData();
 		if(resistance<1000 or resistance>3500) return -1;
-		return map(resistor, StraightResistance, BendResistance, 0 ,90.0);
+		return map(DivResistor, StraightResistance, BendResistance, 0 ,90.0);
 	}
 
 	// TODOOOOOOO
+	/*
 	static bool readData(void* buff, int pin, float DivResistor){ // Static method for resistance
 		int ADC_pin= analogRead(pin);
 		if(ADC_pin<1000 or ADC_pin>3500) return 0; 
-		float Volt_pin = ADC_pin*VCC/4095.0;
-		*buff=DivResistor*(1/( (VCC / Volt_pin ) -1.0));
+		float Volt_pin = ADC_pin*DEF_VCC/4095.0;
+		*buff=DivResistor*(1/( (DEF_VCC / Volt_pin ) -1.0));
 		return 1;
 	}
+	*/
 
 	void setPin(int pin){
 		this->pin=pin;
@@ -90,15 +102,13 @@ public:
 		return BendResistance;
 	}
 
-	int getType(){
-		return type;
+	void saveData() {
+
 	}
 
-	void setup(){ 	// To setup Flex's pin
-		pinMode(pin,INPUT);
+	int getType() {
+		return TYPE_FLEX;
 	}
-
-	void saveData();
 
 	std::string toString(){
 		std::string s="";

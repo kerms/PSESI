@@ -21,8 +21,12 @@ private:
 	int 	pin;
 
 public:
-	Tilt(int pin) : pin(pin)
+	Tilt(int pin) : Sensor(0,0,0),pin(pin)
 	{
+
+	}
+
+	~Tilt() {
 
 	}
 

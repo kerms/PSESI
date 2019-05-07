@@ -21,3 +21,4 @@ void loop() {
   Serial.println("Resistance: " +String(resis)+ " ohms");
   //neck.transmitWifi();
 }
+

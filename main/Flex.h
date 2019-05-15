@@ -1,7 +1,7 @@
 /*********************************************************************************************
 A class for the flex sensor in a voltage divider circuit where the flex is connected between
-your pin and the ground and the divider resistor makes the link between VCC (usually 3.3 V)
-and your pin. 
+VCC (usually 3.3 V) and the chosen pin. The divider resistor makes the link between the in 
+and GND(ground). 
 
 *********************************************************************************************/
 #ifndef DEF_FLEX
@@ -47,7 +47,7 @@ public:
 		int ADC_pin= analogRead(pin); // Read the ADC value of the pin chosen (between 0 to 4095)
 		if(ADC_pin<1000 or ADC_pin>3500) return -1; // ADC value does not match with expectations : Mostly pin issue or misconnections
 		float Volt_pin = ADC_pin*VCC/4095.0; // Cross-multiplication for Volt_pin
-		return DivResistor*(1/( (VCC / Volt_pin ) -1.0)) ; // Using divider circuit's formula
+		return DivResistor*( (VCC/Volt_pin) -1.0) ; // Using divider circuit's formula
 	}
 
 	float readAngleData(){ //Convert resistance to angle through mapping
@@ -60,12 +60,12 @@ public:
 
 
 	static float readData(int pin, float DivResistor,float StraightResistance, 
-		float BendResistance, int VCC=0, int resistance=0)
+		float BendResistance, int VCC=0)
 	{ // Static method for resistance
 		int ADC_pin= analogRead(pin);
 		if(ADC_pin<1000 or ADC_pin>3500) return -1; 
 		float Volt_pin = ADC_pin*VCC/4095.0;
-		resistance= DivResistor*(1/( (VCC / Volt_pin ) -1.0));
+		float resistance = DivResistor*( (VCC / Volt_pin ) -1.0);
 		return map(resistance, StraightResistance, BendResistance, 0 ,90.0);
 	}
 

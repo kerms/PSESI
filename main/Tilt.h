@@ -19,11 +19,17 @@ class Tilt : public Sensor{
 
 private:
 	int 	pin;
+	float 	*buf;
+	int 	bufSize;				// Buf size
+	int 	bufPos;				// Buf write position
 
 public:
-	Tilt(int pin) : Sensor(0,0,0),pin(pin)
+	Tilt(int pin, int buf_size) : Sensor(0,0,0),pin(pin)
 	{
-
+		this->buf= new int[buf_size];
+		this->bufSize = buf_size;
+		this->bufPos = 0;
+		pinMode(pin,INPUT);
 	}
 
 	~Tilt() {
@@ -34,13 +40,9 @@ public:
 		return digitalRead(this->pin); // Give 1 if we have 3.3V, else 0
 	}
 
-	//TODOOOO
-	/*
-	static bool readData(void* buff, int pin){ // Static method for resistance
-		*buff=digitalRead(pin);
-		if( *buff!=0 || *buff!=1 ) return 0; 
-		return 1; 
-	}*/
+	static int readData(int pin){ // Static method for resistance
+		return digitalRead(pin);
+	}
 
 
 	void setPin(int pin){
@@ -51,8 +53,12 @@ public:
 		return pin;
 	}
 
-	void setup(){ 	// To setup tilt's pin
-		pinMode(pin,INPUT);
+	float* getBuf(){
+		return buf;
+	}
+
+	int getType() {
+		return TYPE_TILT;
 	}
 
 	std::string toString(){

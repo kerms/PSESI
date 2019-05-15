@@ -9,7 +9,6 @@ and your pin.
 
 #include "Sensor.h"
 
-#define DEF_VCC 3.3
 
 
 class Flex : public Sensor{
@@ -20,7 +19,7 @@ private:
 	float 	DivResistor; 		// Divider circuit's resistor
 	float 	StraightResistance; // Flex straight resistance. Use the one you measure to avoid disparty values
 	float	BendResistance; 	// Flex bend resistance
-	float 	*buf; //TODOOOOOOOO
+	float 	*buf;
 	int 	bufSize;				// Buf size
 	int 	bufPos;				// Buf write position
 
@@ -56,19 +55,17 @@ public:
 		float angle;
 		resistance= readResData();
 		if(resistance<1000 or resistance>3500) return -1;
-		return map(DivResistor, StraightResistance, BendResistance, 0 ,90.0);
+		return map(resistance, StraightResistance, BendResistance, 0 ,90.0);
 	}
 
-	// TODOOOOOOO
-	/*
-	static bool readData(void* buff, int pin, float DivResistor){ // Static method for resistance
+
+	static float readData(int pin, float DivResistor,float StraightResistance, float BendResistance){ // Static method for resistance
 		int ADC_pin= analogRead(pin);
-		if(ADC_pin<1000 or ADC_pin>3500) return 0; 
-		float Volt_pin = ADC_pin*DEF_VCC/4095.0;
-		*buff=DivResistor*(1/( (DEF_VCC / Volt_pin ) -1.0));
-		return 1;
+		if(ADC_pin<1000 or ADC_pin>3500) return -1; 
+		float Volt_pin = ADC_pin*VCC/4095.0;
+		resistance= DivResistor*(1/( (VCC / Volt_pin ) -1.0));
+		return map(resistance, StraightResistance, BendResistance, 0 ,90.0);
 	}
-	*/
 
 	void setPin(int pin){
 		this->pin=pin;
@@ -102,12 +99,17 @@ public:
 		return BendResistance;
 	}
 
-	void saveData() {
-
-	}
-
 	int getType() {
 		return TYPE_FLEX;
+	}
+
+	float* getBuf(){
+		return buf;
+	}
+
+	void saveData() {
+		buf[bufPos]=readAngleData();
+		bufPos++;
 	}
 
 	std::string toString(){

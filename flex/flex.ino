@@ -40,7 +40,7 @@ void loop()
   int flexADC = analogRead(FLEX_PIN);
   Serial.println(String(flexADC));
   float flexV = flexADC * VCC / 4095.0; // Produit en croix pour obtenir la valeur en Volt au pin choisi sachant que pour 3.3V on a une val au pin de 4095
-  float flexR = R_DIV * ( 1/((VCC / flexV) - 1.0)); // Exploitation du diviseur de tension pour obetenir la valeur de resistance du flex sensor " flexV = Vcc*flexR / (flexR + R_DIV) " 
+  float flexR = R_DIV * ( (VCC / flexV) - 1.0); // Exploitation du diviseur de tension pour obetenir la valeur de resistance du flex sensor " flexV = Vcc*flexR / (flexR + R_DIV) " 
   Serial.println("Resistance: " + String(flexR) + " ohms");
 
   // Use the calculated resistance to estimate the sensor's

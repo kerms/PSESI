@@ -59,7 +59,9 @@ public:
 	}
 
 
-	static float readData(int pin, float DivResistor,float StraightResistance, float BendResistance){ // Static method for resistance
+	static float readData(int pin, float DivResistor,float StraightResistance, 
+		float BendResistance, int VCC=0, int resistance=0)
+	{ // Static method for resistance
 		int ADC_pin= analogRead(pin);
 		if(ADC_pin<1000 or ADC_pin>3500) return -1; 
 		float Volt_pin = ADC_pin*VCC/4095.0;

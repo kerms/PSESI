@@ -15,31 +15,38 @@ class Flex : public Sensor{
 
 
 private:
-	int 	pin;
-	float 	DivResistor; 		// Divider circuit's resistor
-	float 	StraightResistance; // Flex straight resistance. Use the one you measure to avoid disparty values
-	float	BendResistance; 	// Flex bend resistance
-	float 	*buf;
-	int 	bufSize;				// Buf size
-	int 	bufPos;				// Buf write position
+	int 		pin;
+	float 		DivResistor; 		// Divider circuit's resistor
+	float 		StraightResistance; // Flex straight resistance. Use the one you measure to avoid disparty values
+	float		BendResistance; 	// Flex bend resistance
+	float 		*buf0;
+	float		*buf1;
+	int 		bufSize;			// Buf size
+	int 		bufPos;				// Buf write position
+	int 		id;					// Flex ID
+	static int 	id_cpt=0;
 
 
 public:
-	Flex(int pin, float DivResistor, float StraightResistance, float BendResistance, int buf_size=500)
-		:Sensor(0, 3.3, 0)
+	Flex(int pin, float DivResistor, float StraightResistance, float BendResistance, int buf_size=250, int position=0)
+		:Sensor(int position, 3.3, 1)
 	{
 		this->pin=pin;
 		this->DivResistor=DivResistor;
 		this->StraightResistance=StraightResistance;
 		this->BendResistance=BendResistance;
-		this->buf= new float[buf_size];
+		this->buf0= new float[buf_size];
+		this->buf1= new float[buf_size];
 		this->bufSize = buf_size;
 		this->bufPos = 0;
+		id_cpt++;
+		id = id_cpt;
 		pinMode(pin,INPUT);
 	}
 
 	virtual ~Flex(){
-		delete [] buf;
+		delete [] buf0;
+		delete [] buf1;
 	}
 
 	
@@ -105,12 +112,41 @@ public:
 		return TYPE_FLEX;
 	}
 
-	float* getBuf(){
-		return buf;
+	float* getBuf0(){
+		return buf0;
 	}
 
+	float* getBuf1(){
+		return buf1;
+	}
+
+	int getbufPos(){
+		return bufPos;
+	}	
+
+	static int getNb(){  //Return the number of Flex created
+		return id_cpt;
+	}
+
+	int getId(){
+		return id;
+	}
+
+	int getType(){
+		return type_sensor;
+	}
+
+
 	void saveData() {
-		buf[bufPos]=readAngleData();
+		if(bufPos<250){
+			buf0[bufPos]=readAngleData();
+		}
+		else if(bufPos<500){
+			buf1[bufPos%250]=readAngleData();
+		}
+		else if(bufPos==500){
+			bufPos=0;
+		}
 		bufPos++;
 	}
 
@@ -118,6 +154,10 @@ public:
 		std::string s="";
 		s+=readAngleData();
 		return s;
+	}
+
+	std::string IDtoString(){
+		std::string s=getType()+"_"+getId();
 	}
 
 

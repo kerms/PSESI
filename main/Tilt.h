@@ -18,13 +18,15 @@ class Tilt : public Sensor{
 
 
 private:
-	int 	pin;
-	float 	*buf;
-	int 	bufSize;				// Buf size
-	int 	bufPos;				// Buf write position
+	int 			pin;
+	float 			*buf;
+	int 			bufSize;			// Buf size
+	int 			bufPos;				// Buf write position
+	int 			id;					// TILT ID
+	static int 		id_cpt;
 
 public:
-	Tilt(int pin, int buf_size) : Sensor(0,0,0),pin(pin)
+	Tilt(int pin, int buf_size, int position=0) : Sensor(position,0,2), pin(pin)
 	{
 		this->buf= new int[buf_size];
 		this->bufSize = buf_size;
@@ -59,6 +61,14 @@ public:
 
 	int getType() {
 		return TYPE_TILT;
+	}
+
+	static int getNb(){
+		return id_cpt;
+	}
+
+	int getID(){
+		return id;
 	}
 
 	std::string toString(){

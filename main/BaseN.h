@@ -23,6 +23,9 @@ need in this position.
 #define WifiPeriod	1000 	// Huge amount because we wont use it all the time
 #define BLEPeriod	10000	// Same
 
+#include <SPI.h>			// For SD card module
+#include <SD.h>				// For SD card
+
 extern WiFiClient client;
 
 class BaseN : public Esp32 {
@@ -40,6 +43,7 @@ public:
 		wifi_connect_server(SESI_IPv4, SESI_PORT);
 		this->tilt = tilt;
 		this->flex = flex;
+
 	}
 
 	std::string readData(){
@@ -48,8 +52,25 @@ public:
 		return flex->toString();
 	}
 
-	void transmitSD(){
-		if (!waitFor(SDTimer, SDPeriod)) return;
+	void setup_SD(int pin){
+		SD.begin(pin); //Pin
+		Serial.print("Initializing SD card...");
+		if(!SD.begin(pin)) {
+    		Serial.println("initialization failed!");
+    		return;
+  		}
+  		Serial.println("initialization done.");
+	}
+
+	void transmitToSD(String file,float *buf){
+		//if (!waitFor(SDTimer, SDPeriod)) return;
+		dataFile = SD.open(file, FILE_WRITE); // FILE_WRITE : to write and read in this file
+		if(dataFile){
+			Serial.println("File opened ok");
+			for
+			dataFile.println(buf)
+		}
+
 	}
 
 	void transmitWifi(){

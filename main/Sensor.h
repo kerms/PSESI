@@ -10,18 +10,20 @@
 #define TYPE_FLEX	 	1
 #define TYPE_TILT		2
 
+
+
 class Sensor
 {
 protected:
 	int idposition = 0;
 	float VCC = 0;
-	int id_sensor = 0;
+	int type_sensor = 0;
 
 public:
 
 	Sensor(unsigned int idposition=POS_UNKNOWN, float VCC=3.3, 
-		unsigned int id_sensor=0)
-		: idposition(idposition), VCC(VCC), id_sensor(id_sensor)
+		unsigned int type_sensor=TYPE_UNKNOWN)
+		: idposition(idposition), VCC(VCC), type_sensor(type_sensor)
 	{}
 	
 	virtual ~Sensor(){}

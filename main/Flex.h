@@ -15,16 +15,21 @@ class Flex : public Sensor{
 
 
 private:
+	//Features
 	int 		pin;
 	float 		DivResistor; 		// Divider circuit's resistor
 	float 		StraightResistance; // Flex straight resistance. Use the one you measure to avoid disparty values
 	float		BendResistance; 	// Flex bend resistance
-	float 		*buf0;
-	float		*buf1;
-	int 		bufSize;			// Buf size
-	int 		bufPos;				// Buf write position
+
+	//Identification of the object
 	int 		id;					// Flex ID
-	static int 	id_cpt=0;
+	static int 	id_cntr=0;
+	//Buffers for transmission
+	float 		*buf;
+	int 		bufSize;			// Buf size
+	float		*PTW;				// Write pointer
+	float		*PTR;				// Read pointer
+
 
 
 public:
@@ -35,18 +40,17 @@ public:
 		this->DivResistor=DivResistor;
 		this->StraightResistance=StraightResistance;
 		this->BendResistance=BendResistance;
-		this->buf0= new float[buf_size];
-		this->buf1= new float[buf_size];
+		this->buf= new float[buf_size];
 		this->bufSize = buf_size;
 		this->bufPos = 0;
-		id_cpt++;
-		id = id_cpt;
+		this->PTW = buf;
+		id = id_cntr;
+		id_cntr++;
 		pinMode(pin,INPUT);
 	}
 
 	virtual ~Flex(){
-		delete [] buf0;
-		delete [] buf1;
+		delete [] buf;
 	}
 
 	
@@ -125,7 +129,7 @@ public:
 	}	
 
 	static int getNb(){  //Return the number of Flex created
-		return id_cpt;
+		return id_cntr;
 	}
 
 	int getId(){
@@ -138,11 +142,8 @@ public:
 
 
 	void saveData() {
-		if(bufPos<250){
-			buf0[bufPos]=readAngleData();
-		}
-		else if(bufPos<500){
-			buf1[bufPos%250]=readAngleData();
+		if(bufPos<buf_size){
+			buf[bufPos]=readAngleData();
 		}
 		else if(bufPos==500){
 			bufPos=0;

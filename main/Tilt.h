@@ -18,18 +18,28 @@ class Tilt : public Sensor{
 
 
 private:
+	//Features
 	int 			pin;
 	float 			*buf;
 	int 			bufSize;			// Buf size
+	
+	//Id
 	int 			bufPos;				// Buf write position
 	int 			id;					// TILT ID
-	static int 		id_cpt;
+	static int 		id_cntr;			// TILT creations
+	
+	//Buffers for transmission
+	float 		*buf0;
+	float		*buf1;
+	int 		bufSize;			// Buf size
+	int 		bufPos;				// Buf write position
+
 
 public:
-	Tilt(int pin, int buf_size, int position=0) : Sensor(position,0,2), pin(pin)
+	Tilt(int pin, int buf_size=250, int position=0) : Sensor(position,0,2), pin(pin), bufSize(buf_size)
 	{
-		this->buf= new int[buf_size];
-		this->bufSize = buf_size;
+		this->buf0 = new float[buf_size];
+		this->buf1 = new float[buf_size];
 		this->bufPos = 0;
 		pinMode(pin,INPUT);
 	}
@@ -64,7 +74,7 @@ public:
 	}
 
 	static int getNb(){
-		return id_cpt;
+		return id_cntr;
 	}
 
 	int getID(){

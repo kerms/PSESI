@@ -9,8 +9,10 @@
 #define TYPE_UNKNOWN 	0
 #define TYPE_FLEX	 	1
 #define TYPE_TILT		2
+#define TYPE_ACC_GYRO	3
 
 
+#define 
 
 class Sensor
 {

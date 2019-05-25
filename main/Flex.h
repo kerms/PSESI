@@ -115,10 +115,6 @@ public:
 		return id;
 	}
 
-	int getType(){
-		return type_sensor;
-	}
-
 	void saveData() {
 		fifo.writeBufr(readAngleData());
 	}

@@ -1,6 +1,6 @@
 /*********************************************************************************************
 A class for the flex sensor in a voltage divider circuit where the flex is connected between
-VCC (usually 3.3 V) and the chosen pin. The divider resistor makes the link between the in 
+VCC (usually 3.3 V) and the chosen pin. The divider resistor makes the link between the pin 
 and GND(ground). 
 
 *********************************************************************************************/
@@ -24,33 +24,24 @@ private:
 	//Identification of the object
 	int 		id;					// Flex ID
 	static int 	id_cntr=0;
-	//Buffers for transmission
-	float 		*buf;
-	int 		bufSize;			// Buf size
-	float		*PTW;				// Write pointer
-	float		*PTR;				// Read pointer
 
 
 
 public:
-	Flex(int pin, float DivResistor, float StraightResistance, float BendResistance, int buf_size=250, int position=0)
+	Flex(int pin, float DivResistor, float StraightResistance, float BendResistance, int position=0)
 		:Sensor(int position, 3.3, 1)
 	{
-		this->pin=pin;
-		this->DivResistor=DivResistor;
-		this->StraightResistance=StraightResistance;
-		this->BendResistance=BendResistance;
-		this->buf= new float[buf_size];
-		this->bufSize = buf_size;
-		this->bufPos = 0;
-		this->PTW = buf;
-		id = id_cntr;
-		id_cntr++;
+		this->pin 					= pin;
+		this->DivResistor 			= DivResistor;
+		this->StraightResistance 	= StraightResistance;
+		this->BendResistance 		= BendResistance;
+		this->id 					= id_cntr;
+		this->id_cntr++;
 		pinMode(pin,INPUT);
 	}
 
 	virtual ~Flex(){
-		delete [] buf;
+		delete [] fifo;
 	}
 
 	
@@ -116,18 +107,6 @@ public:
 		return TYPE_FLEX;
 	}
 
-	float* getBuf0(){
-		return buf0;
-	}
-
-	float* getBuf1(){
-		return buf1;
-	}
-
-	int getbufPos(){
-		return bufPos;
-	}	
-
 	static int getNb(){  //Return the number of Flex created
 		return id_cntr;
 	}
@@ -140,16 +119,10 @@ public:
 		return type_sensor;
 	}
 
-
 	void saveData() {
-		if(bufPos<buf_size){
-			buf[bufPos]=readAngleData();
-		}
-		else if(bufPos==500){
-			bufPos=0;
-		}
-		bufPos++;
+		fifo.writeBufr(readAngleData());
 	}
+
 
 	std::string toString(){
 		std::string s="";

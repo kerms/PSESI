@@ -28,24 +28,17 @@ private:
 	int 			id;					// TILT ID
 	static int 		id_cntr;			// TILT creations
 	
-	//Buffers for transmission
-	float 		*buf0;
-	float		*buf1;
-	int 		bufSize;			// Buf size
-	int 		bufPos;				// Buf write position
+	//Fifo for transmission
 
 
 public:
-	Tilt(int pin, int buf_size=250, int position=0) : Sensor(position,0,2), pin(pin), bufSize(buf_size)
+	Tilt(int pin, int position=0) : Sensor(position,0,2), pin(pin)
 	{
-		this->buf0 = new float[buf_size];
-		this->buf1 = new float[buf_size];
-		this->bufPos = 0;
 		pinMode(pin,INPUT);
 	}
 
 	~Tilt() {
-
+		delete[] fifo;
 	}
 
 	int readData(){
@@ -65,9 +58,6 @@ public:
 		return pin;
 	}
 
-	float* getBuf(){
-		return buf;
-	}
 
 	int getType() {
 		return TYPE_TILT;
@@ -79,6 +69,10 @@ public:
 
 	int getID(){
 		return id;
+	}
+
+	void saveData(){
+		fifo.writeBufr(readData());
 	}
 
 	std::string toString(){

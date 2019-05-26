@@ -35,13 +35,12 @@ public:
 	{
 		wifi_connect(SESI_SSID, SESS_PASS, -1);
 		wifi_connect_server(SESI_IPv4, SESI_PORT);
-		sensors = new Sensor[];
 
 	}
 
 	void addSensor(Sensor* sensor){
 		sensors[cntr_sensors]=sensor;
-		switch (sensor.getType()){
+		switch (sensor->getType()){
 			case 1 : 
 				cntr_flex++;
 				break;
@@ -61,7 +60,7 @@ public:
 	//Communication WIFI and BLE
 	void transmitWifi(){
 		//if (!waitFor(WifiTimer, WifiPeriod)) return;
-		client.print(readData().c_str());
+		//client.print(readData().c_str());
 	}
 	
 	void transmitBLE( ){
@@ -71,16 +70,10 @@ public:
 	//End Communicaiton
 
 
-	void getFullBuff(){
-		for(int i=0; i<cntr_sensors; i++){
-			if
-		}
-	}
-
 	std::string toString(){ 
-		string s="";
+		std::string s="";
 		for(int i=0; i<cntr_sensors; i++){
-			s+=sensors[i].toString()+"\n";
+			s+=sensors[i]->toString()+"\n";
 		}
 		return s;
 	}

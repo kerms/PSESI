@@ -38,7 +38,6 @@ public:
 	}
 
 	~Tilt() {
-		delete[] fifo;
 	}
 
 	int readData(){
@@ -72,7 +71,7 @@ public:
 	}
 
 	void saveData(){
-		fifo.writeBufr(readData());
+		fifo.writeBuf(readData());
 	}
 
 	std::string toString(){

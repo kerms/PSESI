@@ -7,7 +7,7 @@ WiFiClient client;
 
 
 Flex *flex = new Flex(4, 10000, 10000, 20000);
-BaseN *neck= new BaseN(NULL, (Sensor *)flex);
+BaseN *neck= new BaseN();
 
 float resis;
 

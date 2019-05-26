@@ -11,8 +11,9 @@
 #define TYPE_TILT		2
 #define TYPE_ACC_GYRO	3
 
-
+#import <Arduino.h>
 #include "Fifo.h"
+#include <string>
 
 class Sensor
 {
@@ -26,9 +27,8 @@ public:
 
 	Sensor(unsigned int idposition=POS_UNKNOWN, float VCC=3.3, 
 		unsigned int type_sensor=TYPE_UNKNOWN)
-		: idposition(idposition), VCC(VCC), type_sensor(type_sensor)
+		: idposition(idposition), VCC(VCC), type_sensor(type_sensor), fifo()
 	{
-		fifo = new Fifo();
 	}
 	
 	virtual ~Sensor(){}

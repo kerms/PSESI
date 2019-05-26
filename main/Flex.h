@@ -23,13 +23,13 @@ private:
 
 	//Identification of the object
 	int 		id;					// Flex ID
-	static int 	id_cntr=0;
+	static int 	id_cntr;
 
 
 
 public:
 	Flex(int pin, float DivResistor, float StraightResistance, float BendResistance, int position=0)
-		:Sensor(int position, 3.3, 1)
+		:Sensor(position, 3.3, 1)
 	{
 		this->pin 					= pin;
 		this->DivResistor 			= DivResistor;
@@ -41,7 +41,6 @@ public:
 	}
 
 	virtual ~Flex(){
-		delete [] fifo;
 	}
 
 	
@@ -115,8 +114,8 @@ public:
 		return id;
 	}
 
-	void saveData() {
-		fifo.writeBufr(readAngleData());
+	void saveData(){
+		fifo.writeBuf(readAngleData());
 	}
 
 

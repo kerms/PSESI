@@ -23,6 +23,10 @@ public:
 		status 	= 0;
 	}
 
+	~Fifo(){
+		delete[] buffer;
+	}
+
 	float* getBuf(){
 		return buffer;
 	}
@@ -87,16 +91,16 @@ public:
 				val = buffer[PTR];
 				PTR++;
 				status--;
-				data *= val;
+				*data = val;
 				return 1;
 			}
 
 			else{
-				PTR = 0:
+				PTR = 0;
 				val = buffer[PTR];
 				PTR++;
 				status--;
-				data *= val;
+				*data = val;
 				return 1;
 			}
 		}
@@ -104,7 +108,7 @@ public:
 	}
 
 
-}
+};
 
 
 

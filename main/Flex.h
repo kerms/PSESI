@@ -118,10 +118,17 @@ public:
 		fifo.writeBuf(readAngleData());
 	}
 
+	int getData(void * buff)
+	{
+		float * casted_buff = (float *)buff;
+		*casted_buff = readAngleData();
+		return 1;
+	}
+
 
 	std::string toString(){
 		std::string s="";
-		s+=readAngleData();
+		s+= String(readAngleData()).c_str();
 		return s;
 	}
 

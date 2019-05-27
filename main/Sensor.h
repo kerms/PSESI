@@ -37,6 +37,8 @@ public:
 
 	virtual int getType()=0;
 
+	virtual int getData(void * buff)=0;
+
 	virtual std::string toString()=0;
 
 	Fifo getFifo(){

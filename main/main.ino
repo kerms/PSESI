@@ -1,5 +1,6 @@
 #include <WiFi.h>
 
+
 #include "Flex.h"
 WiFiClient client;
 
@@ -14,11 +15,14 @@ float resis;
 
 void setup() {
   Serial.begin(115200);
+  neck->addSensor(flex);
+  init_BLE_client();
 }
 
 void loop() {
-  resis=flex->readAngleData();
-  Serial.println("Resistance: " +String(resis)+ " ohms");
-  //neck.transmitWifi();
+  //resis=flex->readAngleData();
+  //Serial.println("Resistance: " +String(resis)+ " ohms");
+  //delay(125);
+  neck->transmitBLE();
 }
 

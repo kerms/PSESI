@@ -7,6 +7,7 @@
 //extern SODI_BLE_Client BLE_client;
 extern boolean _connected;
 extern boolean _scan_found;
+extern BLERemoteService* pRemoteService;
 extern BLERemoteCharacteristic * _remoteChar[NB_CHAR];
 extern BLEAddress* _myDevice;
 extern BLEScan* _pBLEScan;
@@ -79,7 +80,7 @@ bool BLE_connect() {
     pClient->connect(*_myDevice);  
 
     // Obtain a reference to the service we are after in the remote BLE server.
-    BLERemoteService* pRemoteService = pClient->getService(servUUID); 
+    pRemoteService = pClient->getService(servUUID); 
     if (pRemoteService == nullptr) {
       Serial.print("Failed to find our service UUID: ");
       Serial.println(servUUID.toString().c_str());

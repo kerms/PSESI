@@ -26,6 +26,7 @@ void loop() {
   {
     BLE_write(i, "hey");
   }
+  //censer envoyer les données
   
   delay(1000);
 }

@@ -10,44 +10,74 @@ value become 0.
 #ifndef DEF_FLEX
 #define DEF_FLEX
 
-#include "sensor.h"
+#include "Sensor.h"
 
 
 
-class Tilt : public sensor{
+class Tilt : public Sensor{
 
 
 private:
-	int 	pin;
+	//Features
+	int 			pin;
+	float 			*buf;
+	int 			bufSize;			// Buf size
+	
+	//Id
+	int 			bufPos;				// Buf write position
+	int 			id;					// TILT ID
+	static int 		id_cntr;			// TILT creations
+	
+	//Fifo for transmission
+
 
 public:
-	Tilt::Tilt(int pin) : pin(pin)
+	Tilt(int pin, int position=0) : Sensor(position,0,2), pin(pin)
 	{
-
+		pinMode(pin,INPUT);
 	}
 
-	bool readData(void* buff){
-		*buff=digitalRead(this.pin); // Give 1 if we have 3.3V, else 0
-		if( *buff!=0 || *buff!=1 ) return 0; 
-		return 1; 
+	~Tilt() {
 	}
 
-	static bool readData(void* buff, int pin){ // Static method for resistance
-		*buff=digitalRead(pin);
-		if( *buff!=0 || *buff!=1 ) return 0; 
-		return 1; 
+	int readData(){
+		return digitalRead(this->pin); // Give 1 if we have 3.3V, else 0
 	}
+
+	static int readData(int pin){ // Static method for resistance
+		return digitalRead(pin);
+	}
+
 
 	void setPin(int pin){
-		this.pin=pin;
+		this->pin=pin;
 	}
 
 	int getPin(){
 		return pin;
 	}
 
-	void setup(){ 	// To setup tilt's pin
-		pinMode(pin,INPUT);
+
+	int getType() {
+		return TYPE_TILT;
+	}
+
+	static int getNb(){
+		return id_cntr;
+	}
+
+	int getID(){
+		return id;
+	}
+
+	void saveData(){
+		fifo.writeBuf(readData());
+	}
+
+	std::string toString(){
+		std::string s="";
+		s+=readData();
+		return s;
 	}
 
 

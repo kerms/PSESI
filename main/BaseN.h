@@ -6,65 +6,77 @@ need in this position.
 #ifndef DEF_BASEC
 #define DEF_BASEC
 
-#include "esp32.h"
-#include "tilt.h"
-#include "flex.h"
+#include "Esp32.h"
+#include "Tilt.h"
+#include "Flex.h"
+#include "wifi_client.h"
 
-#define MAX_WAIT_FOR_TIMER 2 // 1 timer to read data every period_1, a timer to save those on sd card, an other for WIFI
-#define BUFF_WEIGHT 100
-#define DataTimer	0
-#define SDTimer		1
-#define WifiTimer	2
-#define BLETimer	3
-#define DataPeriod 	100 	// in microseconds
-#define SDPeriod	1000 	// Depends on the time we need to write on SD card
-#define WifiPeriod	100000 	// Huge amount because we wont use it all the time
-#define BLEPeriod	10000	// Same
 
-struct sensorsData{ //Struc to store Data
-	float flexDatum;
-	int	tiltDatum;
-} sensorsData;
+#define SERVICE 3; 
 
-class BaseC : public esp32 {
+extern WiFiClient client;
+
+class BaseN : public Esp32 {
 
 private:
-	Tilt* tilt;
-	Flex* flex;
-	sensorsData sData;
-	sensorsData* buff; //Temporary buffer to store data until it goes on SD card
-	int cpt;
+	//List of sensors
+	Sensor*		sensors[10];
+	int			cntr_sensors=0;
+
+	//Sensor's cntr Type
+	int cntr_flex=0;
+	int cntr_tilt=0;
+	int cntr_acc_gyro=0;
 
 
 public:
 
-	BaseN :: BaseN(Tilt* tilt, Flex* flex) : this.tilt(tilt), this.flex(flex)
+	BaseN()
 	{
-		this.buff=new sensorsData[BUFF_WEIGHT];
-		this.cpt=0;
-	}
-
-	void readData(){
-		if (!waitFor(DataTimer, DataPeriod)) return;
-		tilt.readData(&(sData->tiltDatum));
-		flex.readAngleData(&(sData->flexDatum));
-		buff[cpt]=sData;
-		cpt++;
+		wifi_connect(SESI_SSID, SESS_PASS, -1);
+		wifi_connect_server(SESI_IPv4, SESI_PORT);
 
 	}
 
-	void transmitSD(){
-		if (!waitFor(SDTimer, SDPeriod)) return;
+	void addSensor(Sensor* sensor){
+		sensors[cntr_sensors]=sensor;
+		switch (sensor->getType()){
+			case 1 : 
+				cntr_flex++;
+				break;
+			case 2 :
+				cntr_tilt++;
+				break;
+			case 3 :
+				cntr_acc_gyro++;
+				break;
+			default :
+				break;
+		}
+
+		cntr_sensors++;
 	}
 
+	//Communication WIFI and BLE
 	void transmitWifi(){
-		if (!waitFor(WifiTimer, WifiPeriod)) return;
+		//if (!waitFor(WifiTimer, WifiPeriod)) return;
+		//client.print(readData().c_str());
 	}
 	
-	void transmitBLE(){
-		if (!waitFor(BLETimer, BLEPeriod)) return;
+	void transmitBLE( ){
+		int service= SERVICE;
+		//if (!waitFor(BLETimer, BLEPeriod)) return;
 	}
-	
+	//End Communicaiton
+
+
+	std::string toString(){ 
+		std::string s="";
+		for(int i=0; i<cntr_sensors; i++){
+			s+=sensors[i]->toString()+"\n";
+		}
+		return s;
+	}
 
 };
 

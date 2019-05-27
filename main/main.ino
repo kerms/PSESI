@@ -1,9 +1,24 @@
-void setup() {
-  // put your setup code here, to run once:
+#include <WiFi.h>
 
+#include "Flex.h"
+WiFiClient client;
+
+#include "BaseN.h"
+
+
+Flex *flex = new Flex(4, 10000, 10000, 20000);
+BaseN *neck= new BaseN();
+
+float resis;
+
+
+void setup() {
+  Serial.begin(115200);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-
+  resis=flex->readAngleData();
+  Serial.println("Resistance: " +String(resis)+ " ohms");
+  //neck.transmitWifi();
 }
+

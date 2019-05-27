@@ -1,24 +1,13 @@
 /******************************************************************************
-Flex_Sensor_Example.ino
-Example sketch for SparkFun's flex sensors
-  (https://www.sparkfun.com/products/10264)
-Jim Lindblom @ SparkFun Electronics
-April 28, 2016
 
-Create a voltage divider circuit combining a flex sensor with a 47k resistor.
-- The resistor should connect from 3.3V to the pin.
-- The flex sensor should connect from the pin to GND
-As the resistance of the flex sensor increases (meaning it's being bent), the
-voltage at A0 should decrease.
 
-Development environment specifics:
-Arduino 1.6.7
 ******************************************************************************/
 const int TILT_PIN = 4; 
 //Le capteur d'inclinaison se comporte sois en circuit fermé ( à la verticale)
 //ou en circuit ouvert( pour une inclinaison de 45°). On interprete ça selon 0 ou 1
 
-
+int TiltADC =0;
+int Tilt=0;
 void setup() 
 {
   Serial.begin(9600);
@@ -28,7 +17,11 @@ void setup()
 void loop() 
 {
   // Read the ADC, and calculate voltage and resistance from it
-  int TiltADC = digitalRead(TILT_PIN); // Donerra 0 ou 1 selon si on détecte 3,3 V ou non
-  Serial.println(String(TiltADC));
+  TiltADC = digitalRead(TILT_PIN); // Donerra 0 ou 1 selon si on détecte 3,3 V ou non
+  Serial.println("Digital"+String(TiltADC));
+  Tilt  = analogRead(TILT_PIN);
+  
+  Serial.println(String(Tilt));
+  
   delay(500);
 }

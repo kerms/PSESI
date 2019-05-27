@@ -1,61 +1,77 @@
 /*********************************************************************************************
 A class for the flex sensor in a voltage divider circuit where the flex is connected between
-your pin and the ground and the divider resistor makes the link between VCC (usually 3.3 V)
-and your pin. 
+VCC (usually 3.3 V) and the chosen pin. The divider resistor makes the link between the pin 
+and GND(ground). 
 
 *********************************************************************************************/
 #ifndef DEF_FLEX
 #define DEF_FLEX
 
-#include "sensor.h"
+#include "Sensor.h"
 
 
 
-class Flex : public sensor{
+class Flex : public Sensor{
 
 
 private:
-	int 	pin;
-	float 	DivResistor; 		// Divider circuit's resistor
-	float 	StraightResistance; // Flex straight resistance. Use the one you measure to avoid disparty values
-	float	BendResistance; 	// Flex bend resistance
+	//Features
+	int 		pin;
+	float 		DivResistor; 		// Divider circuit's resistor
+	float 		StraightResistance; // Flex straight resistance. Use the one you measure to avoid disparty values
+	float		BendResistance; 	// Flex bend resistance
+
+	//Identification of the object
+	int 		id;					// Flex ID
+	static int 	id_cntr;
+
 
 
 public:
-	Flex::Flex(int pin, float DivResistor, float StraightResistance, float BendResistance){
-		this.pin=pin;
-		this.DivResistor=DivResistor;
-		this.StraightResistance=StraightResistance;
-		this.BendResistance=BendResistance;
+	Flex(int pin, float DivResistor, float StraightResistance, float BendResistance, int position=0)
+		:Sensor(position, 3.3, 1)
+	{
+		this->pin 					= pin;
+		this->DivResistor 			= DivResistor;
+		this->StraightResistance 	= StraightResistance;
+		this->BendResistance 		= BendResistance;
+		this->id 					= id_cntr;
+		this->id_cntr++;
+		pinMode(pin,INPUT);
+	}
+
+	virtual ~Flex(){
 	}
 
 	
-	bool readResData(void* buff){
+	float readResData(){
 		int ADC_pin= analogRead(pin); // Read the ADC value of the pin chosen (between 0 to 4095)
-		if(ADC_pin<1000 or ADC_pin>3500) return 0; // ADC value does not match with expectations : Mostly pin issue or misconnections
+		if(ADC_pin<1000 or ADC_pin>3500) return -1; // ADC value does not match with expectations : Mostly pin issue or misconnections
 		float Volt_pin = ADC_pin*VCC/4095.0; // Cross-multiplication for Volt_pin
-		*buff=DivResistor*(1/( (VCC / Volt_pin ) -1.0)) ; // Using divider circuit's formula
-		return 1
+		return DivResistor*( (VCC/Volt_pin) -1.0) ; // Using divider circuit's formula
 	}
 
-	bool readAngleData(void* buff){ //Convert resistance to angle through mapping
-		float* resistance;
-		readResData(resistance);
-		if(resistance<1000 or resistance>3500) return 0;
-		*buff=map(resistor, StraightResistance, BendResistance, 0 ,90.0);
-		return 1;
+	float readAngleData(){ //Convert resistance to angle through mapping
+		float resistance;
+		float angle;
+		resistance= readResData();
+		if(resistance<1000 or resistance>3500) return -1;
+		return map(resistance, StraightResistance, BendResistance, 0 ,90.0);
 	}
 
-	static bool readData(void* buff, int pin, float DivResistor){ // Static method for resistance
+
+	static float readData(int pin, float DivResistor,float StraightResistance, 
+		float BendResistance, int VCC=0)
+	{ // Static method for resistance
 		int ADC_pin= analogRead(pin);
-		if(ADC_pin<1000 or ADC_pin>3500) return 0; 
+		if(ADC_pin<1000 or ADC_pin>3500) return -1; 
 		float Volt_pin = ADC_pin*VCC/4095.0;
-		*buff=DivResistor*(1/( (VCC / Volt_pin ) -1.0));
-		return 1;
+		float resistance = DivResistor*( (VCC / Volt_pin ) -1.0);
+		return map(resistance, StraightResistance, BendResistance, 0 ,90.0);
 	}
 
 	void setPin(int pin){
-		this.pin=pin;
+		this->pin=pin;
 	}
 
 	int getPin(){
@@ -63,15 +79,15 @@ public:
 	}
 
 	void setDivResistor(float resistance){
-		this.resistor=resistor;
+		this->DivResistor=resistance;
 	}
 
 	float getDivResistor(){
-		return resistor;
+		return DivResistor;
 	}
 
 	void setStraightResistance(float resistance){
-		this.StraightResistance=resistance;
+		this->StraightResistance=resistance;
 	}
 
 	float getStraightResistance(){
@@ -79,16 +95,40 @@ public:
 	}
 
 	void setBendResistance(float resistance){
-		this.BendResistance=resistance;
+		this->BendResistance=resistance;
 	}
 
 	float getBendResistance(){
 		return BendResistance;
 	}
 
-	void setup(){ 	// To setup Flex's pin
-		pinMode(pin,INPUT);
+	int getType() {
+		return TYPE_FLEX;
 	}
+
+	static int getNb(){  //Return the number of Flex created
+		return id_cntr;
+	}
+
+	int getId(){
+		return id;
+	}
+
+	void saveData(){
+		fifo.writeBuf(readAngleData());
+	}
+
+
+	std::string toString(){
+		std::string s="";
+		s+=readAngleData();
+		return s;
+	}
+
+	std::string IDtoString(){
+		std::string s=getType()+"_"+getId();
+	}
+
 
 
 };

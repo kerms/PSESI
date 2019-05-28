@@ -6,7 +6,7 @@
 #include <BLEUtils.h>
 #include <BLEServer.h>
 
-#define NB_CHAR 4
+#define NB_CHAR 3
 
 extern BLEUUID servUUID;
 extern BLEUUID charUUID[];

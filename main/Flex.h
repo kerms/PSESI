@@ -55,7 +55,8 @@ public:
 		float resistance;
 		float angle;
 		resistance= readResData();
-		if(resistance<1000 or resistance>3500) return -1;
+		Serial.println("Flex readData() " + String(pin) + " value : " + String(resistance)) ;
+		//if(resistance<1000 or resistance>3500) return -1;
 		return map(resistance, StraightResistance, BendResistance, 0 ,90.0);
 	}
 

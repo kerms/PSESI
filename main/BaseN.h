@@ -71,12 +71,18 @@ public:
 		if (!waitFor(&BLE_TIMER, 1000000)) return; //every sec
 		if ( !BLE_connect())
 			return;
-		float buff;
+		std::string str;
 		//sensors[0]->getData(&buff);
-		_remoteChar[0]->writeValue(sensors[0]->toString());
-		Serial.print("value ");
-		//Serial.print(sensors[0]->toString());
-		Serial.println(" transmited ");
+		for (int i = 0; i < cntr_sensors; ++i)
+		{		
+			str = sensors[0]->toString();
+			_remoteChar[0]->writeValue(str.c_str());
+			Serial.print("value ");
+			Serial.print(str.c_str());
+			//Serial.print(sensors[0]->toString());
+			Serial.print(" transmited ");
+			Serial.println(analogRead(32));
+		}
 	}
 	//End Communicaiton
 

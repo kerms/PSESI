@@ -11,14 +11,20 @@
 #define bleServerName "ESP32_server"
 long randNumber;
 char val[50];
+int SD_PIN = 32; // TODO
+int SD_OK = 0;
 
 void setup() {
   Serial.begin(115200);
   Serial.println("Starting BLE work!");
   init_BLE_server(); 
   advertise ();//creation des charac et associer les droits
-  
-
+  /*
+  if(!SD.begin()) {
+    Serial.println("initialization failed!");
+  }
+  SD_OK = 1;
+  */
 } // End of setup.
 
 
@@ -40,7 +46,6 @@ void loop() {
 
      
    
-  delay(2000);
-  
-}
+    delay(2000);
+  }
 }

@@ -5,5 +5,3 @@ BLECharacteristic *pCharacteristic[NB_CHAR];
 BLEService *pService;
 BLEServer *pServer;
 boolean connected = false;
-
-

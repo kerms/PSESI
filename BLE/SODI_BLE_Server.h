@@ -3,11 +3,14 @@
 #define __BLE_SODI_SERVER_H__
 #include <Arduino.h>
 #include "SODI_BLE.h"
+#include <SPI.h>      // For SD card module
+#include <SD.h>       // For SD card
 
 extern boolean connected;
 extern BLECharacteristic *pCharacteristic[NB_CHAR];
 extern BLEService *pService;
 extern BLEServer *pServer;
+
 //static uint16_t mtu;
 //static uint16_t mtu1;
 
@@ -40,6 +43,15 @@ class MyBLEChar : public BLECharacteristicCallbacks
         Serial.print(", value : ");
         Serial.println(pCharacteristic->getValue().c_str());
 
+        /*
+        File file = SD.open(pCharacteristic->getUUID().toString().c_str(), FILE_WRITE);
+        if (!file) {
+            Serial.println("write failed");
+            return;
+        }
+        file.println(pCharacteristic->getValue().c_str());
+        file.close();
+        */
     }
 };
 
@@ -69,7 +81,6 @@ void init_BLE_server()
                                          BLECharacteristic::PROPERTY_WRITE
                                        );
     }
-
     Serial.println("Characteristics flags defined!");
 }
 

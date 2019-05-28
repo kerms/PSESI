@@ -4,20 +4,25 @@
 #include "Flex.h"
 WiFiClient client;
 
+#include "Esp32.h"
 #include "BaseN.h"
 
-
-Flex *flex = new Flex(4, 10000, 10000, 20000);
-BaseN *neck= new BaseN();
+Flex *flex;
+BaseN *neck;
 
 float resis;
-
+unsigned long timer;
 
 void setup() {
   Serial.begin(115200);
+  //pinMode(4, INPUT);
+  flex = new Flex(32, 10000, 10000, 20000);
+  neck= new BaseN();
   neck->addSensor(flex);
   init_BLE_client();
+  //Serial.println(analogRead(4));
 }
+
 
 void loop() {
   //resis=flex->readAngleData();
